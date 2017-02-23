@@ -1,0 +1,58 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--<link type="text/css" rel="stylesheet" href="accueil.css" />-->
+<link rel="stylesheet" href="style_poker_main_page.css" />
+<title>Lobby ${requestScope.game}</title>
+</head>
+<body>
+  <center><h1>Bienvenue sur le Poker !</h1>
+  </center>
+  <div>
+    <fieldset>
+      <legend> Liste des joueurs dans le lobby :</legend>
+      <div id="poker">
+      <p class="player_list"> ${applicationScope.players.toString()}</p>
+      </div>
+    </fieldset>
+  </div>
+  
+  <script src="jquery-3.1.1.min.js"></script>
+  
+  <script type="text/javascript">
+  	var url = "http://localhost:8080/neoblik/lobby?game=poker"
+    $('#poker').load(url, null);
+  	
+  </script>
+  <!-- 
+  <script> 
+
+  function updatePlayer() {
+	  
+	    var xhr = new XMLHttpRequest();
+	    xhr.open('GET', 'http://localhost:8080/neoblik/lobby?game=Poker');
+	    xhr.addEventListener('readystatechange', function() { // On gère ici une requête asynchrone
+
+	        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) { // Si le fichier est chargé sans erreur
+	        	var response = xhr.response;
+	        	console.log(response);
+	            document.getElementById('player_list').innerHTML = response;
+	       	
+
+	        }
+
+	    });
+
+	    xhr.send(null); // La requête est prête, on envoie tout !
+	}
+  
+  setInterval(updatePlayer, 3000);
+
+  -->
+  </script>
+</body>
+</html>
