@@ -39,9 +39,9 @@
 	      <br />
 
 	    </fieldset>
-
+	
         </form>
-
+		<a href ="connect_smartphone"><strong>Connecter son smartphone</strong></a>
     </body>
 
 </html>

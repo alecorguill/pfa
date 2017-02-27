@@ -27,7 +27,8 @@ public class Test extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		this.getServletContext().getRequestDispatcher( VUE ).forward( request, response );
+		response.sendRedirect("maj1.html");
+		//this.getServletContext().getRequestDispatcher( VUE ).forward( request, response );
 	}
 
 	/**

@@ -9,6 +9,18 @@ public class Players {
 		players = new ArrayList<Player>();
 	}
 	
+	public ArrayList<Player> getPlayers() {
+		return this.players;
+	}
+	
+	public Player getPlayer(String pseudo) {
+		for(Player p : this.players) {
+			if(p.getPseudo().equals(pseudo))
+				return p;
+		}
+		return null;
+	}
+	
 	public void addPlayer(Player player){
 		if(!alreadyIn(player))
 			players.add(player);
@@ -18,6 +30,38 @@ public class Players {
 		return players.contains(player);
 	}
 	
+	public boolean alreadyIn(String pseudo){
+		for(Player p : this.players) {
+			if(p.getPseudo().equals(pseudo))
+				return true;
+		}
+		return false;
+	}
+	
+	/*
+	 * Return true if the player with this pseudo exists and has no 
+	 * smarphone connected
+	 * false if not
+	 */
+	public boolean canConnect(String pseudo){
+		for(Player p : this.players) {
+			if(p.getPseudo().equals(pseudo))
+				return !p.getHasSmartphone();
+		}
+		return false;
+	}
+
+	/*
+	 * Return true if all players are ready to enter the game
+	 * false if not
+	 */
+	public boolean ready(){
+		for(Player p : this.players){
+			if(!p.getHasSmartphone())
+				return false;
+		}
+		return true;
+	}
 	public int nbPlayers(){
 		return players.size();
 	}

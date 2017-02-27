@@ -22,7 +22,7 @@ public class Accueil extends HttpServlet {
     	}
     	
     	String nextPath = "lobby";
-    	
+    	//Redirection page choix des jeu si c'est le premier joueur
     	if( ( (Players)(context.getAttribute("players")) ).nbPlayers() < 1 ){
     		nextPath = "choix_jeu";
     	}

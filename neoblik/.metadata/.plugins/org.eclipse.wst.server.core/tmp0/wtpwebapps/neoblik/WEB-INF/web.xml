@@ -24,9 +24,7 @@
     <servlet-name>Lobby</servlet-name>
     <url-pattern>/lobby</url-pattern>
   </servlet-mapping>
-  
-  
-    <servlet>
+  <servlet>
     <servlet-name>Test</servlet-name>
     <servlet-class>neoblik.Test</servlet-class>
   </servlet>
@@ -35,5 +33,12 @@
     <url-pattern>/test</url-pattern>
   </servlet-mapping>
   
-  
+    <servlet>
+    <servlet-name>ConnectSmartphone</servlet-name>
+    <servlet-class>neoblik.ConnectSmartphone</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ConnectSmartphone</servlet-name>
+    <url-pattern>/connect_smartphone</url-pattern>
+  </servlet-mapping>
 </web-app>

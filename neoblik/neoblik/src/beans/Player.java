@@ -4,7 +4,13 @@ public class Player {
 	
 	private String pseudo;
 	private boolean isAdmin;
+	private boolean hasSmartphone;
 	
+	
+	public Player() {
+		this.isAdmin       = false;
+		this.hasSmartphone = false;
+	}
 	
 	public String getPseudo(){
 		return this.pseudo;
@@ -18,6 +24,13 @@ public class Player {
 		return this.isAdmin;
 	}
 	
+	public boolean getHasSmartphone() {
+		return this.hasSmartphone;
+	}
+	
+	public void setHasSmarphone(boolean b) {
+		this.hasSmartphone = b;
+	}
 	public void setIsAdmin(boolean isAdmin){
 		this.isAdmin = isAdmin;
 	}
