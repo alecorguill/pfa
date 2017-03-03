@@ -24,13 +24,14 @@ public class Lobby extends HttpServlet {
 		
 		String game = (String) request.getParameter("game");
     	request.setAttribute("game", game);
+    	response.addHeader("Access-Control-Allow-Origin", "*");
 		this.getServletContext().getRequestDispatcher( VUE ).forward( request, response );
 	}
 	
     public void doPost( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException{
         /* Traitement des données du formulaire */
     	String pseudo = request.getParameter( CHAMP_PSEUDO );
-
+    	
     	FormPlayer form = new FormPlayer();
     	
     	Player player = form.signPlayer(request);
