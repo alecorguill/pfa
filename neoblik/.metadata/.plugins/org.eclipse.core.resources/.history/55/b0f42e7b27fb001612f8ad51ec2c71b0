@@ -1,0 +1,36 @@
+
+<!DOCTYPE html >
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--<link type="text/css" rel="stylesheet" href="accueil.css" />-->
+<link rel="stylesheet" href="style_poker_main_page.css" />
+<title>Lobby ${requestScope.game}</title>
+</head>
+<body>
+<div id='list_player'>
+  	<center><h1>Bienvenue sur le Poker !</h1>
+  	</center>
+    <fieldset>
+      <legend> Liste des joueurs dans le lobby :</legend>
+      <p> ${applicationScope.players.toString()}</p>
+    </fieldset>
+ </div>
+  
+	<div id="icone">
+      <a href ="maj1.html"><img src="img/iconepoker.png" alt="iconepoker"/><strong>Lancer</strong></a>
+    </div>
+</body>
+  <script src="jquery-3.1.1.min.js"></script>
+  
+  <script type="text/javascript">
+  	//Refresh the players 
+  	var page_part = "http://localhost:8080/neoblik/lobby #list_player";
+  	var my_div = $('#list_player');
+    setInterval(function() {my_div.load(page_part);}, 1000);
+  	
+    
+    
+    
+  </script>
+</html>
