@@ -2,7 +2,7 @@
  * An object of the Hand reprensents a set of 2 cards of type Card
  */
 
-package poker;
+package model;
 
 
 

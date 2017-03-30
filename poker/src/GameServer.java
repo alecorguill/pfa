@@ -3,11 +3,16 @@
  * It has a list of players, the deck, the pot and the dealer position
  */
 
-package poker;
+package model;
 
 import java.util.*;
+import java.net.*;
+import java.io.*;
+import java.util.concurrent.locks.*;
 
-public class GameServer {
+import model.Move.Type;
+
+public class GameServer implements Runnable{
 
     private static int stackValue = 1500; //value of the stack of each player
 
@@ -16,12 +21,18 @@ public class GameServer {
     private ArrayList<Card> board; //cards of the board
 
     private Deck deck; //Deck of the game
-    private Pot pot;
+    private Pot pot; // Pot of the game
+    private Move playerMove; // Move of one player during the game
+    private boolean playerPlayed; // False if the server is waiting for a move from the current player
+    
+    private Lock lockMove = new ReentrantLock();
+    private Lock lockPlayer = new ReentrantLock();
+
     private int dealerPosition; //Index in players of dealer's position
     private int nbPlayers; //Number of players (avoid calculating it over and over)
     private int blind; //Big blind's value
     private boolean preflop;
-    private Move playerMove;
+	private int indexToPlay;
 
     private static final List<Move.Type> VALUES =
 	Collections.unmodifiableList(Arrays.asList(Move.Type.values()));
@@ -32,11 +43,12 @@ public class GameServer {
      * GameServer constructor. Initialize the pot, the deck (unshuffled), the dealer     
      * Position
      */
-    public GameServer(int nbPlayer){
+    public GameServer(ArrayList<String> pseudos){
 	players = new ArrayList<Player>();
+	int nbPlayer = pseudos.size();
 	int i;
 	for(i=0; i<nbPlayer; ++i)
-	    players.add(new Player(stackValue));
+	    players.add(new Player(stackValue, pseudos.get(i)));
 	board = new ArrayList<Card>();
 	deck = new Deck(); //Initialisation of the UNSHUFFLED !
 	Random rand = new Random();
@@ -49,9 +61,8 @@ public class GameServer {
     /**
      * Function to be called when the game starts, it then execute the game loop
      */
-    public void start(){
+    public void run(){
 	//Initialisation
-	int indexToPlay;
 	int gain;
 	int earningsSum;
 	Player pSmallBlind;
@@ -92,26 +103,29 @@ public class GameServer {
 	    preflop = false;
 	    resetPlayers();
 	    //Flop
-	    	    System.out.println("Flop");
+	    System.out.println("Flop");
 	    deck.burn();
 	    board.add(deck.draw());
 	    board.add(deck.draw());
 	    board.add(deck.draw());
-	    indexToPlay = nextPlayer(dealerPosition);
+	    if (!roundOver())
+		indexToPlay = nextPlayer(dealerPosition);
 	    turnLoop(indexToPlay);
 	    resetPlayers();
 	    //Turn
 	    System.out.println("Turn");
 	    deck.burn();
 	    board.add(deck.draw());
-	    indexToPlay = nextPlayer(dealerPosition);
+	    if (!roundOver())
+		indexToPlay = nextPlayer(dealerPosition);
 	    turnLoop(indexToPlay);
 	    resetPlayers();
 	    //River
-	    System.out.println("River");
+	    	    System.out.println("River");
 	    deck.burn();
 	    board.add(deck.draw());
-	    indexToPlay = nextPlayer(dealerPosition);
+	    if (!roundOver())
+		indexToPlay = nextPlayer(dealerPosition);
 	    turnLoop(indexToPlay);
 	    resetPlayers();
 	    //find the winner of the turn
@@ -213,18 +227,27 @@ public class GameServer {
      * and a boolean for the preflop case
      */
     private void turnLoop(int indexToPlay){
+	
 	boolean validPlay;
 	Player player;
+	boolean playerHasPlayed;
 	//Here we make the player play one by one
 	while(!roundOver()){
-	    //int turnContrib = pot.maxHashValue();
 	    player = players.get(indexToPlay);
+	    playerHasPlayed = false;
 	    validPlay = false;
-	    //we need this line for the moment to initialize playerMove
-	    playerMove = new Move(Move.Type.CHECK, 666);
+	    playerMove = new Move(Type.CHECK,0);
 	    while(!validPlay){
-		//For the moment the move is choose randomly
-		playerMove = randomIA(player);
+	    	
+	    	while(!playerHasPlayed){
+	    		
+	    		lockPlayer.lock();
+	    		playerHasPlayed = playerPlayed;
+	    		lockPlayer.unlock();
+	    		
+	    	}
+	    	//System.out.println("Debloqué " + playerMove.toString());
+
 		validPlay = checkValidity(playerMove, player);
 	    }
 	    
@@ -233,7 +256,8 @@ public class GameServer {
 	    
 	    System.out.println();
 	    updateGame(players.get(indexToPlay), playerMove);
-	    indexToPlay = nextPlayer(indexToPlay);
+	    if (!roundOver())
+		indexToPlay = nextPlayer(indexToPlay);
 	}
     }
 
@@ -284,10 +308,13 @@ public class GameServer {
 	 * All contribution of non folded and non allin players are 
 	 * equal and everyone played at least once.
 	 */
+	System.out.println("equal : " + pot.contributionEqual());
+	System.out.println("all played : " + allPlayersPlayed());
 
 	Player pBigBlind;
 	boolean b = allPlayersPlayed() && pot.contributionEqual();
 	if (nbPlayers - nbFoldedOrAllIn() <= 1 && pot.contributionEqual()){
+	    System.out.println("hello bitch");
 	    return true;
 	}
 	if (nbPlayers == 2){
@@ -309,7 +336,7 @@ public class GameServer {
 	}
 	return true;
     }
-	
+
     /**
      *Returns true if the game is over
      *false if not
@@ -327,14 +354,6 @@ public class GameServer {
 	switch (move.getType()){
 	case RAISE:
 	    bool = move.getValue() + pot.getContribution(p) > pot.maxHashValue();
-	    /*
-	    if (preflop) {
-	    
-	    return (move.getValue() >= 2*blind);
-	    }
-	    else {
-	    
-	    }*/
 	    break;
 	case CHECK:
 	    //case when check is impossible
@@ -372,12 +391,12 @@ public class GameServer {
 
     private int nextPlayer(int index){
 	int next = index;
-	if (!roundOver()){
-	    do {
-		next = (next+1) % nbPlayers;
-	    }
-	    while (players.get(next).isFolded() || players.get(next).isAllIn());
-	}
+	if(!roundOver()){
+		do {
+	    	next = (next+1) % nbPlayers;
+		}
+		while (players.get(next).isFolded() || players.get(next).isAllIn());
+		}
 	return next;
     }
 
@@ -406,5 +425,36 @@ public class GameServer {
 	    type = Move.Type.CALL;
 	else type = Move.Type.CHECK;*/
 	return new Move(type, value);
+    }
+    
+    public void setMove(Move m){
+    	lockMove.lock();
+    	this.playerMove = m;
+    	lockMove.unlock();
+    	
+    	lockPlayer.lock();
+    	this.playerPlayed = true;
+    	lockPlayer.unlock();
+    	
+    }
+    
+    public ArrayList<Player> getPlayers(){
+    	return this.players;
+    }
+    
+    public Player getPlayer(String pseudo){
+    	
+    	for(Player p : players){
+    	
+    		if(p.getPseudo().equals(pseudo))
+    			return p;
+    	}
+    	
+    	return null;
+    }
+    
+    //Return the pseudo of the player to be playing
+    public String getPlayerToPlay(){
+    	return players.get(this.indexToPlay).getPseudo();
     }
 }

@@ -1,4 +1,4 @@
-package poker;
+package model;
 
 import java.util.*;
 
@@ -25,6 +25,25 @@ public class Move {
 	this.value = value;
     }
 
+    public Move(String type, int value){
+    	switch(type){
+    		case "call":
+    			this.type = Type.CALL;
+    			break;
+    		case "fold":
+    			this.type = Type.FOLD;
+    			break;
+    		case "raise":
+    			this.type = Type.RAISE;
+    			break;
+    		case "check":
+    			this.type = Type.CHECK;
+    			break;
+    		default:
+    			this.type = Type.FOLD;
+    	}
+    	this.value = value;
+    }
     public Type getType() {
 	return type;
     }

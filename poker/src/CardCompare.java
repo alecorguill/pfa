@@ -1,6 +1,6 @@
    
 
-package poker;
+package model;
 import java.util.*;
 class CardCompare implements Comparator<Card> {
  /**

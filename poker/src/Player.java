@@ -3,7 +3,7 @@
  * It has a hand
  */
 
-package poker;
+package model;
 
 import java.util.*;
 
@@ -17,7 +17,10 @@ public class Player {
     private boolean played; //Indicated if the player played at least once this 
                             //round
     //private boolean lost; //Indicates if the player lost or not
-    public Player(int stackValue){
+    private String pseudo;
+    
+    public Player(int stackValue, String pseudo){
+    this.pseudo = pseudo;
 	Card c1 = new Card(Card.SPADES, Card.ACE);
 	Card c2 = new Card(Card.SPADES, Card.ACE);
 	ArrayList<Card> array = new ArrayList<Card>();
@@ -154,6 +157,10 @@ public class Player {
 	return value.compare(p.getHandValue());
     }
 
+    public String getPseudo(){
+    	return this.pseudo;
+    }
+    
     /** 
      * Returns a string representation of player object
      */
@@ -164,6 +171,8 @@ public class Player {
 	res += "Stack = " + stack + " ; isAllin : " + isAllIn() + " ; isFolded : " + isFolded() + " ; hasPlayed : " + hasPlayed();
 	return res;
     }
+    
+    
 }
     
 

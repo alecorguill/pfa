@@ -6,7 +6,7 @@
  * 8, 9, 10, jack, queen, or king. 
  */
 
-package poker;
+package model;
 import java.util.*;
 
 public class Card {

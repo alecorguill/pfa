@@ -2,7 +2,7 @@
  * This class represents the round pot
  */
 
-package poker;
+package model;
 import java.util.*;
 
 public class Pot {

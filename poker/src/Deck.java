@@ -2,7 +2,7 @@
  * Object of type Deck represents a set of cards
  */
 
-package poker;
+package model;
 
 import java.util.*;
 

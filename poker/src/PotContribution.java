@@ -3,7 +3,7 @@
  * contains objects of this class
  */
 
-package poker;
+package model;
 
 public class PotContribution{
 

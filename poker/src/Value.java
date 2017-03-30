@@ -9,7 +9,7 @@
  * the round.
  */
 
-package poker;
+package model;
 import java.util.*;
 import java.lang.*;
 
