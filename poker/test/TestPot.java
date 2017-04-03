@@ -1,12 +1,12 @@
-package poker;
+package model;
 import java.util.*;
 
 public class TestPot {
     
     public void testContributionEqual() {
-	Player p = new Player(1500);
-	Player q = new Player(1500);
-	Player r = new Player(1500);
+	Player p = new Player(1500, "a");
+	Player q = new Player(1500, "b");
+	Player r = new Player(1500, "c");
 	ArrayList<Player> players = new ArrayList<Player>();
 	players.add(p);
 	players.add(q);

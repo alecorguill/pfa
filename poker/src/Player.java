@@ -18,9 +18,11 @@ public class Player {
                             //round
     //private boolean lost; //Indicates if the player lost or not
     private String pseudo;
+    private int position; //Indicate the position in the current turn (0 for dealer,
+                          //1 for SB etc..)
     
     public Player(int stackValue, String pseudo){
-    this.pseudo = pseudo;
+	this.pseudo = pseudo;
 	Card c1 = new Card(Card.SPADES, Card.ACE);
 	Card c2 = new Card(Card.SPADES, Card.ACE);
 	ArrayList<Card> array = new ArrayList<Card>();
@@ -52,6 +54,13 @@ public class Player {
      */
     public Value getHandValue(){
 	return value;
+    }
+
+    /**
+     * Set the position
+     */
+    public void setPosition(int pos){
+	position = pos;
     }
 
     /**

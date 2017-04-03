@@ -1,10 +1,10 @@
-package poker;
+package model;
 import java.util.*;
 
 public class TestPlayer{
 
     public void testPlayer(){
-	Player p = new Player(1500);
+	Player p = new Player(1500, "ui");
 	assert p.getStack() == 1500;
 
 	List<Card> cards = new ArrayList<Card>();
@@ -33,8 +33,8 @@ public class TestPlayer{
     }
 
 public void testCompare(){
-	Player p = new Player(1500);
-	Player q = new Player(1500);
+    Player p = new Player(1500, "oui");
+    Player q = new Player(1500, "non");
 
 	Card c1 = new Card(Card.HEARTS, 2);
 	Card c2 = new Card(Card.SPADES, 2);

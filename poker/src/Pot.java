@@ -77,6 +77,27 @@ public class Pot {
     }
 
     /**
+     * Returns the 2-nd highest contribution.
+     */
+    public int max2HashValue() {
+	int max = maxHashValue();
+	int max2 = 0;
+	PriorityQueue<Integer> prq = new PriorityQueue(potContributions.size());
+	for (Map.Entry<Player, PotContribution> pair : potContributions.entrySet())
+	    {
+	        prq.add(pair.getValue().getContribution());
+	    }
+        Integer[] t = new Integer[5];
+	Integer[] res = prq.toArray(t);
+	for (int i = 0 ; i < potContributions.size() ; ++i){
+	    if (res[i] < max && res[i] > max2){
+		max2 = res[i];
+	    }
+	}
+	return max2;
+    }
+
+    /**
      * Returns true if all the non folded and non allin player's 
      * contribution are equal false if not
      */
