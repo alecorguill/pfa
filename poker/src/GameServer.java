@@ -59,14 +59,6 @@ public class GameServer implements Runnable{
 	pot = new Pot(players);
     }
 
-    void resetPosition(){
-	int current = dealerPosition;
-	for (int i = 0 ; i < nbPlayers ; ++i){
-	    players.get(current).setPosition(i);
-	    current = (current + 1) % nbPlayers;
-	}
-    }
-
     /**
      * Function to be called when the game starts, it then execute the game loop
      */
@@ -155,6 +147,17 @@ public class GameServer implements Runnable{
 	    System.out.println();
 	} 
 	System.out.println("Et cest fcking gagne, bien joue " + players.get(0).getPseudo());
+    }
+
+    /**
+     * Set the position of players at the beginning of the turn
+     */
+    private void resetPosition(){
+	int current = dealerPosition;
+	for (int i = 0 ; i < nbPlayers ; ++i){
+	    players.get(current).setPosition(i);
+	    current = (current + 1) % nbPlayers;
+	}
     }
 
     /**
