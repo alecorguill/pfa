@@ -2,7 +2,7 @@
  * This class is used to launch all the tests
  */
 
-package poker;
+package model;
 
 import java.lang.reflect.*;
 
