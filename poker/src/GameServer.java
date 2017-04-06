@@ -105,28 +105,34 @@ public class GameServer implements Runnable{
 	    preflop = false;
 	    resetPlayers();
 	    //Flop
-	    System.out.println("Flop");
-	    deck.burn();
-	    board.add(deck.draw());
-	    board.add(deck.draw());
-	    board.add(deck.draw());
-	    indexToPlay = nextPlayer(dealerPosition);
-	    turnLoop(indexToPlay);
-	    resetPlayers();
-	    //Turn
-	    System.out.println("Turn");
-	    deck.burn();
-	    board.add(deck.draw());
-	    indexToPlay = nextPlayer(dealerPosition);
-	    turnLoop(indexToPlay);
-	    resetPlayers();
-	    //River
-	    System.out.println("River");
-	    deck.burn();
-	    board.add(deck.draw());
-	    indexToPlay = nextPlayer(dealerPosition);
-	    turnLoop(indexToPlay);
-	    resetPlayers();
+	    if (nbPlayerNFolded() >= 2){
+		System.out.println("Flop");
+		deck.burn();
+		board.add(deck.draw());
+		board.add(deck.draw());
+		board.add(deck.draw());
+		indexToPlay = nextPlayer(dealerPosition);
+		turnLoop(indexToPlay);
+		resetPlayers();
+		//Turn
+		if (nbPlayerNFolded() >= 2){
+		    System.out.println("Turn");
+		    deck.burn();
+		    board.add(deck.draw());
+		    indexToPlay = nextPlayer(dealerPosition);
+		    turnLoop(indexToPlay);
+		    resetPlayers();
+		    //River
+		    if (nbPlayerNFolded() >= 2){
+			System.out.println("River");
+			deck.burn();
+			board.add(deck.draw());
+			indexToPlay = nextPlayer(dealerPosition);
+			turnLoop(indexToPlay);
+			resetPlayers();
+		    }
+		}
+	    }
 	    //find the winner of the turn
 	    winner = winnerCalculate();
 	    //Distribution of earnings
