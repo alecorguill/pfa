@@ -176,7 +176,7 @@ public class Player {
     public String toString(){
 	String res = "";
 	res += "Hand = " + hand.toString() + "\n";
-	res += "Value = " + value.getValueAsString() + "\n";
+	res += "Value = " + value.getValueAsString() + " ; Position : " + position + "\n";
 	res += "Stack = " + stack + " ; isAllin : " + isAllIn() + " ; isFolded : " + isFolded() + " ; hasPlayed : " + hasPlayed();
 	return res;
     }
