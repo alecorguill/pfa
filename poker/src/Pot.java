@@ -126,11 +126,21 @@ public class Pot {
 	String res = "";
 	int k = 0;
 	for (Map.Entry<Player, PotContribution> pair : potContributions.entrySet()){
-	    res += /*"Player = " + k +
-		    */"\nContribution = " + pair.getValue().getContribution() + " "/*+ " ; hasPlayed : " + pair.getKey().hasPlayed() + " ; isFolded : " + pair.getKey().isFolded() + " ; Stack : " + pair.getKey().getStack();*/;
-	    res += "Player : " + pair.getKey();
-	    res += "\n";
+	     res += //"Player = " + k +
+			    "\nContribution = " + pair.getValue().getContribution() + " "/*+ " ; hasPlayed : " + pair.getKey().hasPlayed() + " ; isFolded : " + pair.getKey().isFolded() + " ; Stack : " + pair.getKey().getStack();*/;
+	      res += "Player : " + pair.getKey();
+	      res += "\n";
 	    k++;
+	    
+	}
+	return res;
+    }
+
+    public String toString(int turnContrib) {
+	String res = "";
+	for (Map.Entry<Player, PotContribution> pair : potContributions.entrySet()){
+	    int c = pair.getValue().getContribution - turnContrib;
+	    res += pair.getKey().getPseudo() + " : " + c;
 	}
 	return res;
     }
