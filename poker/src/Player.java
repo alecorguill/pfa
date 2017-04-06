@@ -18,11 +18,10 @@ public class Player {
                             //round
     //private boolean lost; //Indicates if the player lost or not
     private String pseudo;
-    private int position; //Indicate the position in the current turn (0 for dealer,
-                          //1 for SB etc..)
+    private int position;
     
     public Player(int stackValue, String pseudo){
-	this.pseudo = pseudo;
+    this.pseudo = pseudo;
 	Card c1 = new Card(Card.SPADES, Card.ACE);
 	Card c2 = new Card(Card.SPADES, Card.ACE);
 	ArrayList<Card> array = new ArrayList<Card>();
@@ -39,14 +38,14 @@ public class Player {
      * Returns the stack of the player
      */
     public int getStack(){
-	return stack;
+    	return this.stack;
     }
 
     /**
      * Returns the hand composed of the starting cards
      */
     public Card[] getHand(){
-	return hand.getHand();
+    	return hand.getHand();
     }
     
     /**
@@ -57,12 +56,12 @@ public class Player {
     }
 
     /**
-     * Set the position
+     * Returns the position of the player
      */
-    public void setPosition(int pos){
-	position = pos;
+    public int getPosition(){
+    	return this.position;
     }
-
+    
     /**
      * Change the hand (two first cards) of the player
      */
@@ -80,6 +79,13 @@ public class Player {
 	value.setCards(board); 
     }
 
+    /**
+     * Set the position
+     */
+    public void setPosition(int pos){
+    	position = pos;
+    }
+    
     /**
      * Add chips at the stack
      */

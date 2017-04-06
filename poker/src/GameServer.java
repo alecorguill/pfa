@@ -32,9 +32,9 @@ public class GameServer implements Runnable{
     private int nbPlayers; //Number of players (avoid calculating it over and over)
     private int blind; //Big blind's value
     private boolean preflop;
-    private int indexToPlay;
-    private int turnContribution;
-
+	private int indexToPlay;
+	private int turnContribution;
+	
     private static final List<Move.Type> VALUES =
 	Collections.unmodifiableList(Arrays.asList(Move.Type.values()));
     private static final int SIZE = VALUES.size();
@@ -73,7 +73,6 @@ public class GameServer implements Runnable{
 	    //Position update
 	    dealerPosition = (dealerPosition+1) % nbPlayers;
 	    resetPosition();
-
 	    System.out.println("Dealer : " + dealerPosition);
 	    //Small and Big Blind Assignment
 	    if (players.size() == 2){
@@ -101,7 +100,7 @@ public class GameServer implements Runnable{
 	    //Preflop
 	    preflop = true;
 	    System.out.println("Preflop");
-	    turnLoop(indexToPlay);
+	    turnLoop();
 	    preflop = false;
 	    resetPlayers();
 	    //Flop
@@ -152,27 +151,29 @@ public class GameServer implements Runnable{
 	    resetGame();
 	    System.out.println();
 	} 
-	System.out.println("Et cest fcking gagne, bien joue " + players.get(0).getPseudo());
+	System.out.println("Et cest fucking gagne, bien joue " + players.get(0).getPseudo());
     }
 
+    
     /**
      * Set the position of players at the beginning of the turn
      */
     private void resetPosition(){
-	int current = dealerPosition;
-	for (int i = 0 ; i < nbPlayers ; ++i){
-	    players.get(current).setPosition(i);
-	    current = (current + 1) % nbPlayers;
-	}
+    	int current = dealerPosition;
+    	for (int i = 0 ; i < nbPlayers ; ++i){
+    		players.get(current).setPosition(i);
+    		current = (current + 1) % nbPlayers;
+    	}
     }
 
+    
     /**
      * Reset players' status at the end of a 'little round' (flop, turn)
      */ 
     private void resetPlayers(){
-	for (Player p : players)
-	    p.newLittleRound();
-	turnContribution = pot.maxHashValue();
+    	for (Player p : players)
+    		p.newLittleRound();
+    	turnContribution = pot.maxHashValue(); 
     }
 
     /**
@@ -244,7 +245,7 @@ public class GameServer implements Runnable{
      * with as arguement the first player who must play this turn
      * and a boolean for the preflop case
      */
-    private void turnLoop(int indexToPlay){
+    private void turnLoop(){
 	
 	boolean validPlay;
 	Player player;
@@ -252,19 +253,20 @@ public class GameServer implements Runnable{
 	//Here we make the player play one by one
 	while(!roundOver()){
 	    player = players.get(indexToPlay);
+	    playerHasPlayed = false;
+	    this.lockPlayer.lock();
+	    this.playerPlayed = false;
+	    this.lockPlayer.unlock();
 	    validPlay = false;
 	    playerMove = new Move(Type.CHECK,0);
 	    while(!validPlay){
-	    	playerHasPlayed = false;
 	    	while(!playerHasPlayed){
 	    		
 	    		lockPlayer.lock();
 	    		playerHasPlayed = playerPlayed;
 	    		lockPlayer.unlock();
-	    		randomIA(player);
+	    		
 	    	}
-	    	//System.out.println("Debloque " + playerMove.toString());
-
 		validPlay = checkValidity(playerMove, player);
 	    }
 	    
@@ -325,7 +327,6 @@ public class GameServer implements Runnable{
 	 * All contribution of non folded and non allin players are 
 	 * equal and everyone played at least once.
 	 */
-
 	Player pBigBlind;
 	boolean b = allPlayersPlayed() && pot.contributionEqual();
 	if (nbPlayers - nbFoldedOrAllIn() <= 1 && pot.contributionEqual()){
@@ -425,18 +426,19 @@ public class GameServer implements Runnable{
     private int nextPlayer(int index){
 	int next = index;
 	if(!roundOver()){
-	    do {
+		do {
 	    	next = (next+1) % nbPlayers;
-	    }
-	    while (players.get(next).isFolded() || players.get(next).isAllIn());
-	}
+		}
+		while (players.get(next).isFolded() || players.get(next).isAllIn());
+		}
+	
 	return next;
     }
-    
+
     /**
      * This method returns a random move. Used to test the game
      */
-    public void randomIA(Player p){
+    private Move randomIA(Player p){
 	Move.Type type;
 	int value;
 	if (pot.contributionEqual()){
@@ -457,7 +459,7 @@ public class GameServer implements Runnable{
 	if (pot.maxHashValue() > pot.getContribution(p))
 	    type = Move.Type.CALL;
 	else type = Move.Type.CHECK;*/
-	setMove(new Move(type, value));
+	return new Move(type, value);
     }
     
     public void setMove(Move m){
@@ -489,5 +491,10 @@ public class GameServer implements Runnable{
     //Return the pseudo of the player to be playing
     public String getPlayerToPlay(){
     	return players.get(this.indexToPlay).getPseudo();
+    }
+    
+    //Return the arrayList of the board cards.
+    public ArrayList<Card> getBoard(){
+    	return this.board;
     }
 }
