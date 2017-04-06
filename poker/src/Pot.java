@@ -76,9 +76,6 @@ public class Pot {
 	return maxEntry.getValue().getContribution();
     }
 
-    /**
-     * Returns the 2-nd highest contribution.
-     */
     public int max2HashValue() {
 	int max = maxHashValue();
 	int max2 = 0;
@@ -96,7 +93,7 @@ public class Pot {
 	}
 	return max2;
     }
-
+    
     /**
      * Returns true if all the non folded and non allin player's 
      * contribution are equal false if not
